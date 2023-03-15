@@ -33,7 +33,9 @@ class RelativeFile(
         return true
     }
 
-    override fun isRemovable() = true
+    override fun isRemovable(): Boolean {
+        return path != mount.path
+    }
 
     override fun getOwnerName() = "user"
 
