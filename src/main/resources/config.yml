@@ -1,0 +1,14 @@
+server:
+  port: 21
+  passive-ports: 11000-12000
+  address: localhost
+  # I'm too lazy to add additional settings
+  # It's unlikely that anyone but me will use it anyway
+users:
+  - name: test
+    password: 1234
+    # Mounts like docker, but do not support nested mount
+    # I mean, mount inside already mounted, please don't
+    mounts:
+      - "/mnt/host_folder:/ftp_folder"
+      - "/mnt/another_host_folder:/also_folder"
