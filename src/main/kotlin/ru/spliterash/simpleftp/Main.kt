@@ -45,8 +45,8 @@ class Main {
         // CRINGE
         context.addListener("default", ListenerFactory().apply {
             port = config.server.port
-            serverAddress = config.server.address
             dataConnectionConfiguration = DataConnectionConfigurationFactory().apply {
+                passiveExternalAddress = config.server.address
                 passivePorts = config.server.passivePorts
             }
                 .createDataConnectionConfiguration()
