@@ -62,14 +62,12 @@ class VirtualDirectory(
 
             result += VirtualDirectory(virtualFolder, filesystem)
         }
-        // Отлишна, терь найдём реальные папки
-
+        // Отлично, теперь найдём реальные смонтированные папки
         for (mount in filesystem.mounts) {
             if (!mount.path.startsWith(path))
                 continue
             if (!oneDepth(path, mount.path))
                 continue
-
             result += filesystem.wrapRelative(mount.path, mount)
         }
 

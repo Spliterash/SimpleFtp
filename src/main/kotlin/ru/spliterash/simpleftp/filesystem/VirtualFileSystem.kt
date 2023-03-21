@@ -6,11 +6,13 @@ import org.slf4j.LoggerFactory
 import ru.spliterash.simpleftp.common.normalize
 import java.io.File
 import java.util.*
+import java.util.regex.Pattern
 
 private val log = LoggerFactory.getLogger(VirtualFileSystem::class.java)
 
 class VirtualFileSystem(
-    val mounts: List<VirtualFileSystemMount>
+    val mounts: List<VirtualFileSystemMount>,
+    private val exclude: List<Pattern>
 ) : FileSystemView {
     val virtualFolders = hashSetOf<String>()
 
@@ -70,11 +72,17 @@ class VirtualFileSystem(
     }
 
     fun wrapRelative(virtualPath: String, mount: VirtualFileSystemMount): FtpFile {
+        if (isExcluded(virtualPath))
+            return ExcludedFile(virtualPath)
+
         val relativePath = virtualPath.substring(mount.path.length)
         val realFile = File(mount.file, relativePath)
 
         return RelativeFile(virtualPath, this, mount, realFile)
     }
+
+    fun isExcluded(virtualPath: String) =
+        exclude.any { it.matcher(virtualPath).matches() }
 
     protected fun getPhysicalName(
         currDir: String,

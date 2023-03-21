@@ -5,9 +5,11 @@ import org.apache.ftpserver.usermanager.impl.ConcurrentLoginPermission
 import org.apache.ftpserver.usermanager.impl.TransferRatePermission
 import org.apache.ftpserver.usermanager.impl.WritePermission
 import ru.spliterash.simpleftp.filesystem.VirtualFileSystemMount
+import java.util.regex.Pattern
 
 class FtpUser(
-    val mounts: List<VirtualFileSystemMount>
+    val mounts: List<VirtualFileSystemMount>,
+    val excludes: List<Pattern>
 ) : BaseUser() {
     init {
         authorities = listOf(

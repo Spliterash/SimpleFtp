@@ -10,6 +10,8 @@ Advantages:
 * ULTRA simple configuration
 * Probably a disadvantage for some, but if you run the process from root you don't have to bother with linux permissions
 * Easy user setup
+  * Virtual Folders
+  * Exclude
 
 Example config
 
@@ -31,4 +33,8 @@ users:
     mounts:
       # Host folder : ftp folder
       - "folder1:/stuff"
+    # RegEX to exclude files
+    # Use virtual path
+    excludes:
+      - /ftp_folder/secret\.txt
 ```

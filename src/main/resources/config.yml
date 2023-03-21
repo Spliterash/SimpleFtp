@@ -12,3 +12,7 @@ users:
     mounts:
       - "/mnt/host_folder:/ftp_folder"
       - "/mnt/another_host_folder:/also_folder"
+    # RegEX to exclude files
+    # Use virtual path
+    excludes:
+      - /ftp_folder/secret\.txt

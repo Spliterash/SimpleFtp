@@ -2,6 +2,7 @@ package ru.spliterash.simpleftp.filesystem
 
 import org.apache.ftpserver.ftplet.FtpFile
 import ru.spliterash.simpleftp.common.name
+import ru.spliterash.simpleftp.common.normalize
 import java.io.*
 
 class RelativeFile(
@@ -74,11 +75,14 @@ class RelativeFile(
         val list = realFile.listFiles() ?: return null
 
         return list
-            .map { file ->
-                val relativePath = file.path.substring(mount.file.path.length)
+            .mapNotNull { file ->
+                val relativePath = file.path.substring(mount.file.path.length).normalize()
                 val virtualPath = mount.path + relativePath
 
-                RelativeFile(virtualPath, filesystem, mount, file)
+                if (!filesystem.isExcluded(virtualPath))
+                    RelativeFile(virtualPath, filesystem, mount, file)
+                else
+                    null
             }
     }
 

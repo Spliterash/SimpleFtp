@@ -13,7 +13,8 @@ class VirtualFilesystemManager : FileSystemFactory {
             throw FtpException("Invalid user type")
 
         val mounts = user.mounts
-        return VirtualFileSystem(mounts)
+        val excludes = user.excludes
+        return VirtualFileSystem(mounts, excludes)
     }
 
 }

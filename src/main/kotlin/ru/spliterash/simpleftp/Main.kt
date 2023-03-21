@@ -9,6 +9,7 @@ import org.apache.ftpserver.DataConnectionConfigurationFactory
 import org.apache.ftpserver.impl.DefaultFtpServer
 import org.apache.ftpserver.impl.DefaultFtpServerContext
 import org.apache.ftpserver.listener.ListenerFactory
+import org.slf4j.LoggerFactory
 import ru.spliterash.simpleftp.common.normalize
 import ru.spliterash.simpleftp.config.FtpConfig
 import ru.spliterash.simpleftp.filesystem.VirtualFileSystemMount
@@ -16,10 +17,12 @@ import ru.spliterash.simpleftp.user.FtpUser
 import ru.spliterash.simpleftp.user.InMemoryUserManager
 import java.io.File
 import java.io.FileOutputStream
+import java.util.regex.Pattern
 
 fun main() {
     Main().launch()
 }
+private val log = LoggerFactory.getLogger(Main::class.java)
 
 class Main {
     fun launch() {
@@ -55,8 +58,9 @@ class Main {
 
         for (user in config.users) {
             val mounts = parseMounts(user.mounts)
+            val excludes = parseExcludes(user.excludes)
             context.userManager.save(
-                FtpUser(mounts).apply {
+                FtpUser(mounts,excludes).apply {
                     name = user.name
                     password = user.password
                     homeDirectory = "/"
@@ -66,6 +70,15 @@ class Main {
 
         val server = DefaultFtpServer(context)
         server.start()
+    }
+
+    private fun parseExcludes(excludes: List<String>): List<Pattern> = excludes.mapNotNull {
+        try {
+            Pattern.compile(it)
+        } catch (ex: Exception) {
+            log.warn("Failed parse exclude '${it}'", it)
+            null
+        }
     }
 
     private fun parseMounts(strMounts: List<String>): List<VirtualFileSystemMount> {
