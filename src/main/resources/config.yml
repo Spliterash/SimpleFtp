@@ -1,6 +1,7 @@
 server:
   port: 21
-  passive-ports: 11000-12000
+  passive-ports: 21000-21010
+  # Replace to global IP, this is IMPORTANT!!!
   address: localhost
   # I'm too lazy to add additional settings
   # It's unlikely that anyone but me will use it anyway
